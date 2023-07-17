@@ -9,15 +9,15 @@ from rocket.core.state import Signal
 from rocket.core.widget import WidgetSpec
 
 # Elements
-from rocket.elements import (
+from rocket.elements.components import (
     RButton,
     RCheckbox,
-    RDiv,
     REntry,
     RLabel,
     RSwitch,
 )
-from rocket.layout import Column, Row, ScrollableColumn
+from rocket.elements.containers import RDiv
+from rocket.layout.layout import Column, Row, ScrollableColumn, ScrollableRow
 
 # Pages
 from rocket.pages.page import BasePage
@@ -53,4 +53,5 @@ __all__ = [
     "Row",
     "Column",
     "ScrollableColumn",
+    "ScrollableRow",
 ]

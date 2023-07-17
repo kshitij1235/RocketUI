@@ -1,13 +1,10 @@
 from __future__ import annotations
 
+import importlib.util
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
-
-# ============================================================
-# Framework defaults (ALWAYS SAFE)
-# ============================================================
 
 PROJECT_NAME: str = "rocket_app"
 VERSION: str = "0.0.0"
@@ -16,6 +13,8 @@ RELEASE: bool = False
 
 @dataclass(slots=True)
 class WindowConfig:
+    """Configuration for the main application window."""
+
     title: str = "Rocket App"
     geometry: str = "800x600"
     resizable: bool = True
@@ -29,24 +28,27 @@ MainWindowConfig = WindowConfig
 MAIN_WINDOW = MainWindowConfig()
 
 
-# ============================================================
-# Safe project override loader
-# ============================================================
-
-
 def _load_project_config() -> None:
+    """
+    Load project configuration from `project_config.py`.
+
+    This file is treated as trusted project code.
+    Only known configuration values are read.
+    """
     global PROJECT_NAME, VERSION, RELEASE, MAIN_WINDOW
 
-    project_root = Path.cwd()
-    config_file = project_root / "project_config.py"
-
-    if not config_file.is_file():
+    config_path = Path.cwd() / "project_config.py"
+    if not config_path.is_file():
         return
 
-    namespace: dict[str, object] = {}
+    spec = importlib.util.spec_from_file_location("rocket_project_config", config_path)
+    if spec is None or spec.loader is None:
+        return
+
+    module = importlib.util.module_from_spec(spec)
 
     try:
-        exec(config_file.read_text(encoding="utf-8"), namespace)
+        spec.loader.exec_module(module)
     except Exception as exc:
         print(
             f"[rocket] Warning: failed to load project_config.py ({exc})",
@@ -54,11 +56,13 @@ def _load_project_config() -> None:
         )
         return
 
-    PROJECT_NAME = str(namespace.get("PROJECT_NAME", PROJECT_NAME))
-    VERSION = str(namespace.get("VERSION", VERSION))
-    RELEASE = bool(namespace.get("RELEASE", RELEASE))
+    # Read simple values safely
+    PROJECT_NAME = str(getattr(module, "PROJECT_NAME", PROJECT_NAME))
+    VERSION = str(getattr(module, "VERSION", VERSION))
+    RELEASE = bool(getattr(module, "RELEASE", RELEASE))
 
-    user_cfg = namespace.get("MainWindowConfig")
+    # Read window config safely
+    user_cfg = getattr(module, "MainWindowConfig", None)
     if user_cfg:
         try:
             MAIN_WINDOW = MainWindowConfig(
@@ -73,9 +77,5 @@ def _load_project_config() -> None:
                 file=sys.stderr,
             )
 
-
-# ============================================================
-# Load overrides safely (CLI-safe)
-# ============================================================
 
 _load_project_config()

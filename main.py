@@ -3,12 +3,10 @@ from rocket.runtime.window_manager import WindowManager
 
 
 def main():
-    windows = WindowManager()
-    main_window = windows.get("main_window")
-
-    page = Homepage(main_window)
+    window = WindowManager().get_runtime()
+    page = Homepage(window)
     page.render()
-    main_window.mainloop()
+    window.mainloop()
 
 
 if __name__ == "__main__":

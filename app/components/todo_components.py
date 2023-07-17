@@ -1,8 +1,7 @@
-from app.ControllerManager import services
+from app.app_context import services
 from app.helper import database
 from rocket import (
     BuildContext,
-    Column,
     RButton,
     RCheckbox,
     RLabel,
@@ -62,31 +61,27 @@ class _TodoList(StatefulComponent):
         self.register_signal(services.todo_store)
 
     def build(self, context: BuildContext) -> WidgetSpec:
-        tasks = database.get_all_tasks()  
-        
+        tasks = database.get_all_tasks()
+
+        childers = []
+
         if not tasks:
-            return self._build_no_tasks(context)
-
-        return ScrollableColumn(
-            spacing=5,
-            expand=self.props.get("expand", False),
-            children=[TaskItem(task=t[0], status=t[1]) for t in tasks],
-        )
-
-    def _build_no_tasks(self, context: BuildContext):
-        should_expand = self.props.get("expand", False)
-        return Column(
-            spacing=10,
-            expand=should_expand,
-            children=[
+            childers = [
                 RLabel(
                     text="No tasks here, why not add one?",
                     font=("Helvetica", 12, "italic"),
                     text_color=context.theme.get_color("text_dim"),
                     # Center the label in the expanded column
-                    expand=should_expand,
+                    expand=self.props.get("expand", False),
                 )
-            ],
+            ]
+        else:
+            childers = [TaskItem(task=t[0], status=t[1]) for t in tasks]
+
+        return ScrollableColumn(
+            spacing=5,
+            expand=self.props.get("expand", False),
+            children=childers,
         )
 
 

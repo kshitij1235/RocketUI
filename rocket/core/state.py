@@ -1,11 +1,10 @@
 import weakref
-from typing import Callable, Generic, List, TypeVar, Optional
-import logging
+from typing import Callable, Generic, List, TypeVar
 
-# Setup simpler logger if not already configured
-logger = logging.getLogger("rocket.state")
+from rocket.log import log
 
 T = TypeVar("T")
+
 
 class Signal(Generic[T]):
     """
@@ -32,24 +31,24 @@ class Signal(Generic[T]):
             old = self._value
             self._value = value
             if self._debug_mode:
-                logger.debug(f"Signal[{self._name}] changed: {old} -> {value}")
+                log(f"Signal[{self._name}] changed: {old} -> {value}")
             self.notify()
 
     def notify(self) -> None:
         # Clean up dead references while iterating
         dead_refs = []
         notified_count = 0
-        
+
         for ref in self._subscribers:
             subscriber = ref()
             if subscriber is not None:
                 try:
                     if self._debug_mode:
-                        logger.debug(f"Signal[{self._name}] notifying {subscriber}")
+                        log(f"Signal[{self._name}] notifying {subscriber}")
                     subscriber(self._value)
                     notified_count += 1
                 except Exception as e:
-                    logger.error(f"Error in signal subscriber {subscriber}: {e}")
+                    log(f"Error in signal subscriber {subscriber}: {e}")
                     # We might want to re-raise here if we want "Fail Fast"
                     raise e
             else:
@@ -73,10 +72,10 @@ class Signal(Generic[T]):
 
             self._subscribers.append(ref)
             if self._debug_mode:
-                logger.debug(f"Signal[{self._name}] subscribed: {callback}")
-                
+                log(f"Signal[{self._name}] subscribed: {callback}")
+
         except TypeError:
-            logger.warning(
+            log(
                 f"Signal[{self._name}]: Could not create weak reference for {callback}. Subscription ignored to prevent leaks."
             )
 

@@ -1,5 +1,6 @@
+from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, Optional, Type
 
 
 @dataclass
@@ -11,7 +12,7 @@ class WidgetSpec:
 
     widget_class: Type
     props: Dict[str, Any] = field(default_factory=dict)
-    children: List["WidgetSpec"] = field(default_factory=list)
+    children: Sequence["WidgetSpec"] = ()
     key: Optional[str] = None
 
     # Internal usage by the Renderer - do not touch in user code

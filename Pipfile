@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cffi = "==1.17.1"
+click = "==8.1.8"
+cryptography = "==44.0.0"
+darkdetect = "==0.8.0"
+packaging = "==24.2"
+pycparser = "==2.22"
+moderngl = "*"
+glfw = "*"
+pyopengl = "*"
+customtkinter = "*"
+rocket = {file = "."}
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"

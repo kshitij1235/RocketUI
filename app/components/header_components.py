@@ -1,4 +1,4 @@
-from app.ControllerManager import services
+from app.app_context import services
 from rocket import BuildContext, RLabel, Row, RSwitch, StatefulComponent, WidgetSpec
 
 
@@ -16,14 +16,13 @@ class _Header(StatefulComponent):
                 RLabel(
                     text="To-do List",
                     font=("Helvetica", 16, "bold"),
-                    # Removing fixed width to let it natural size, switch pushes right
                     side="left",
                 ),
                 RSwitch(
                     text="Dark Mode",
                     checked=is_dark,
                     command=services.theme.toggle,
-                    side="right",  # Push to right
+                    side="right",
                 ),
             ],
         )

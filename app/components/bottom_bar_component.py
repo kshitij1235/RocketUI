@@ -1,7 +1,14 @@
-from app.ControllerManager import services
+from app.app_context import services
 from app.helper import database
-from rocket import BuildContext, RButton, REntry, Signal, StatefulComponent, WidgetSpec
-from rocket import Row
+from rocket import (
+    BuildContext,
+    RButton,
+    REntry,
+    Row,
+    Signal,
+    StatefulComponent,
+    WidgetSpec,
+)
 
 
 class _TaskEntry(StatefulComponent):
@@ -10,7 +17,6 @@ class _TaskEntry(StatefulComponent):
         self.text_signal = Signal("")
 
     def build(self, context: BuildContext) -> WidgetSpec:
-
         return Row(
             spacing=10,
             children=[

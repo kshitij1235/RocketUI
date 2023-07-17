@@ -2,7 +2,7 @@ import sqlite3
 from pathlib import Path
 from typing import List, Tuple
 
-from app.ControllerManager import todo_store
+from app.app_context import todo_store
 
 DB_PATH = Path("rocket.db")
 
