@@ -1,10 +1,7 @@
-from app.main import * 
+from app.mainapp import APP
 
 if __name__=='__main__':
+    window = APP()
+    window.homescreen()
 
-    window = app()
-
-    windows = window.get_rocket_window()
-    windows = window.version_text()
-    windows = window.todo_list()    
-    windows.mainloop()
+    

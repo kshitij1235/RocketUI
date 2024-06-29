@@ -1,1 +1,1 @@
-.master.wm_manage(self.frame)
+    
