@@ -1,10 +1,11 @@
 import sys
-from tkinter import Tk, Label
+from tkinter import Tk, Label,Button
 from tkinter import PhotoImage  # Import PhotoImage for loading images
-from customtkinter import CTkLabel, CTkCheckBox
+from customtkinter import *
 from vendor.json_extractor.extract_values import json_extractor
 from vendor.Rocket.resource_gather import get_resource_images
-
+from vendor.Rocket.Rrender import *
+from src.todo import *
 class homescreen:
     def __init__(self, window):
         self.window = window
@@ -47,4 +48,5 @@ class homescreen:
                     hover_color="#C29130", fg_color="#C29130").pack(padx=100, pady=5, anchor="w")
         Label(window, text="", bg="#E4D5B8").pack(pady=10)
 
+        CTkButton(window,text="re-render",command= lambda root = self.window : rerender(root,  new_todo)).pack()
         return window
