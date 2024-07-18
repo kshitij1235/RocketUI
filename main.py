@@ -1,6 +1,8 @@
 from app.mainapp import APP
 
-if __name__=='__main__':
+
+# Main entry point for the appication 
+def MainApp():
     window = APP()
     window.homescreen()
 

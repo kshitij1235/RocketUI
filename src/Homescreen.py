@@ -6,9 +6,11 @@ from vendor.json_extractor.extract_values import json_extractor
 from vendor.Rocket.resource_gather import get_resource_images
 from vendor.Rocket.Rrender import *
 from src.todo import *
+
 class homescreen:
-    def __init__(self, window):
+    def __init__(self, window:Tk):
         self.window = window
+        window.geometry("500x700")
         self.image_path = get_resource_images('rocket_ui.png')
         self.image = PhotoImage(file=self.image_path)  # Load image using PhotoImage
 

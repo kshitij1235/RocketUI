@@ -11,10 +11,11 @@ class APP:
     def __init__(self) -> None:
         self.windows = windowManager().get_all_rwindows()  
 
+    # make function in the class  where you club all the components , it is like creating 
+    # a page of tkinter 
 
 
-    # make function in the class  where you club all the components  
-    
+    #this is a demo function which bootstraps all the compoennts from src
     def homescreen(self):
         homescreen_ = homescreen(self.windows["main_window"])
         homescreen_.get_rocket_window()
@@ -22,5 +23,6 @@ class APP:
         homescreen_.todo_list()
 
         self.windows["main_window"].mainloop()
+
 
 
