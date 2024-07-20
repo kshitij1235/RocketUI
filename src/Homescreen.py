@@ -1,3 +1,4 @@
+from Rocket import *
 import sys
 from tkinter import Tk, Label,Button
 from tkinter import PhotoImage  # Import PhotoImage for loading images
@@ -10,10 +11,11 @@ from src.todo import *
 class homescreen:
     def __init__(self, window:Tk):
         self.window = window
-        window.geometry("500x700")
-        self.image_path = get_resource_images('rocket_ui.png')
-        self.image = PhotoImage(file=self.image_path)  # Load image using PhotoImage
-
+        try:
+            self.image_path = get_resource_images('rocket_ui.png')
+            self.image = PhotoImage(file=self.image_path)  # Load image using PhotoImage
+        except:
+            print("error loading image")
     def get_rocket_window(self) -> Tk:
         window = self.window
         window.config(bg="#E4D5B8")
@@ -30,7 +32,7 @@ class homescreen:
         return window
     
     def version_text(self):
-        __version__ = json_extractor("Rocket.json").get_value("version")
+        __version__ = rocket["version"];
         CTkLabel(self.window, text=f"Version : {__version__}", font=("Manrope", 15),
                  text_color="black", fg_color="#E4D5B8").pack()
         return self.window

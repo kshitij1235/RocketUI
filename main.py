@@ -6,4 +6,5 @@ def MainApp():
     window = APP()
     window.homescreen()
 
+MainApp()
     
