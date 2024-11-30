@@ -1,10 +1,6 @@
-from app.mainapp import APP
+from final import MainApp
+from Rocket import RELEASE
 
-
-# Main entry point for the appication 
-def MainApp():
-    window = APP()
-    window.homescreen()
-
-MainApp()
-    
+# [TODO] make a debug version 
+if RELEASE : 
+    MainApp()
