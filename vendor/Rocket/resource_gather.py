@@ -1,4 +1,5 @@
 import os
+from vendor.Rocket.Log import log
 
 def get_resource_images(image_name: str)->str:
     """
@@ -8,7 +9,7 @@ def get_resource_images(image_name: str)->str:
     project_root = os.path.normpath(os.path.join(current_directory, '..', '..'))
     image_path = os.path.join(project_root, 'resources', 'images', image_name)
 
-    print(f"bootstraping for resource :  {image_path}")  
+    log(f"bootstraping for resource :  {image_path}")  
 
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image '{image_name}' not found at path: {image_path}")

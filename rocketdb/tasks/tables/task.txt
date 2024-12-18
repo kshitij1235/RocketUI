@@ -1,0 +1,4 @@
+edit src/Homescreen.py 
+under the class component system 
+edit edit the sequence of main.py 
+enjoy rocket ui 

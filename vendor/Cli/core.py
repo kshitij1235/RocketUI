@@ -56,28 +56,30 @@ def create_executable(script_path: str = "main.py",
 
     # Build the PyInstaller command
     command = [
-        'pyinstaller',
-        '--onefile' if onefile else '',
-        script_path,
-        '--add-data',
-        f'{resource_dir}{os.pathsep}resources/images',
-        '--distpath',
-        output_dir
+    'pyinstaller',
+    '--onefile' if onefile else '',
+    script_path,
+    '--add-data',
+    f'{resource_dir}{os.pathsep}resources/images',
+    '--distpath',
+    output_dir
     ]
 
     # Remove empty strings from the command list
     command = [arg for arg in command if arg]
 
+
     try:
         # Run PyInstaller with the constructed command
         subprocess.run(command, check=True)
         print(f"Executable created successfully for {script_path} in {output_dir}")
+        return True
     except subprocess.CalledProcessError as e:
         print(f"An error occurred while creating the executable: {e}")
+        return False
 
 import os
 import subprocess
-
 # [TODO] yet to be executed for release bulit only
 def create_executable_nuitka(script_path: str = "main.py", 
                              resource_dir: str = "resources/images",

@@ -1,7 +1,7 @@
 import click
 from vendor.Cli.core import *
 from Rocket import *
-from final import MainApp
+from main import MainApp
 
 
 @click.group()
@@ -17,9 +17,13 @@ def cleanup():
     files_to_remove = ["main.spec"]
     
     #Dir that you want ot delete
-    dir_to_remove = ["__pycache__","dist","build"]
+    dir_to_remove = ["__pycache__",
+                    "dist",
+                    "build"]
+    
     file_end_with=[".spec"]
-    cleanup_(files_to_remove,dir_to_remove)
+    
+    cleanup_(files_to_remove,dir_to_remove,file_end_with)
 
 
 @cli.command()
@@ -54,7 +58,7 @@ def Run(clean:bool)->None:
 
 
 @cli.command()
-def  version()->None:
+def version()->None:
     print(VERSION)
     return
 
