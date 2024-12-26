@@ -61,6 +61,8 @@ The demo application showcases:
 
 ## 📋 CLI Commands
 
+=======
+
 The framework includes a CLI tool (`manage.py`) with the following commands:
 
 - `python manage.py Run [-c]`: Run the application (use -c flag to clean before running)
@@ -84,4 +86,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
+
+- GitHub: [@kshitij1235](https://github.com/kshitij1235)
+=======
 - GitHub: [@kshitij1235](https://github.com/kshitij1235)
