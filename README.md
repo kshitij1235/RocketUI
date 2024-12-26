@@ -46,6 +46,23 @@ python manage.py Run```
 
 ## 📋 CLI Commands
 
+RocketUI comes with a built-in CLI tool (`manage.py`) that provides several useful commands:
+
+- `python manage.py Run [-c]`: Run the application (use -c flag to clean before running)
+- `python manage.py cleanup`: Clean temporary files and directories
+- `python manage.py built [-o]`: Build the application (use -o for single-file executable)
+- `python manage.py version`: Display current version
+
+The demo application showcases:
+- A main window with the RocketUI logo
+- A todo list component with checkboxes
+- Hot reloading functionality with a re-render button
+- Resource management for images
+
+## 📋 CLI Commands
+
+=======
+
 The framework includes a CLI tool (`manage.py`) with the following commands:
 
 - `python manage.py Run [-c]`: Run the application (use -c flag to clean before running)
@@ -69,4 +86,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📧 Contact
 
+
+- GitHub: [@kshitij1235](https://github.com/kshitij1235)
+=======
 - GitHub: [@kshitij1235](https://github.com/kshitij1235)
