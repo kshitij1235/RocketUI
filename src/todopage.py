@@ -10,13 +10,12 @@ def new_todo(window):
     This is a different todo list 
     '''
     from src.homepages import homepage
-
     todo_list(window,"rocketdb","demo")
       
-    CTkButton(window,text="go to Home",
+    btn = CTkButton(window,text="go to Home",
                   command = lambda root = window : rerender(root, homepage)
-                  ).pack(
-                    padx=100, 
-                    pady=5, 
-                    anchor="center")
+                  )
+    btn.pack(padx=100, 
+            pady=5, 
+            anchor="center")
 

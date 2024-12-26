@@ -29,7 +29,6 @@ def todo_list(window ,database , table_name ):
         new_status = "True" if status_var.get() else "False"
         update_row(database, table_name, task_id, "status", new_status)
     
-    # Create checkboxes for each task
     for task, status, task_id in zip(task_, status_, id_):
         status_var = tk.BooleanVar(value=status)
         
@@ -44,6 +43,5 @@ def todo_list(window ,database , table_name ):
         ).pack(padx=100, pady=5, anchor="w")
     
     Label(window, text="", bg="#E4D5B8").pack(pady=10)
-    return window
 
 

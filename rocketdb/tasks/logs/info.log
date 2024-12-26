@@ -29,3 +29,5 @@ SUCCESS:TABLE : changes made in status,from True -> False
 SUCCESS:TABLE : changes made in status,from False -> True
 SUCCESS:TABLE : changes made in status,from False -> True
 SUCCESS:TABLE : changes made in status,from False -> True
+SUCCESS:TABLE : changes made in status,from False -> True
+SUCCESS:TABLE : changes made in status,from True -> False
