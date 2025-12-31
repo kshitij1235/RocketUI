@@ -1,0 +1,2 @@
+[console_scripts]
+rocket = rocket.cli.main:main

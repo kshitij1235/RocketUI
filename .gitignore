@@ -1,0 +1,8 @@
+tempCodeRunnerFile.py
+__pycache__
+*.pyc
+build
+.vscode
+*.spec
+.zed
+*info-egg
