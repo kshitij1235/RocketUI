@@ -14,10 +14,10 @@ class BasePage:
         
         # Subscribe to theme changes
         if hasattr(self.theme, 'subscribe'):
-            class ThemeSubscriber:
-                def invalidate(s):
-                    self.reload()
-            self.theme.subscribe(ThemeSubscriber())
+            self.theme.subscribe(self._on_theme_change)
+
+    def _on_theme_change(self, _):
+        self.reload()
 
     def reload(self):
         """Rerender the entire page (e.g. on theme switch)."""

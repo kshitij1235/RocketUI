@@ -1,16 +1,17 @@
 import tkinter as tk
 from customtkinter import CTkEntry, CTkButton
 
-from app.ControllerManager import todo_store
+from app.ControllerManager import services
 from app.helper.database import add_task
-from rocket import StatelessWidget, BuildContext
+from rocket import ReactiveWidget, BuildContext
 
-class TaskEntry(StatelessWidget):
+class TaskEntry(ReactiveWidget):
+    def __init__(self):
+        # Responsive to theme
+        super().__init__(services.theme)
+
     def build(self, context: BuildContext, parent: tk.Frame):
-        bottom_frame = tk.Frame(parent, bg=context.theme.get_color("bg"))
-        bottom_frame.pack(side="bottom", fill="x")
-
-        inner_frame = tk.Frame(bottom_frame, bg=context.theme.get_color("bg"))
+        inner_frame = tk.Frame(parent, bg=context.theme.get_color("bg"))
         inner_frame.pack(fill="x", padx=16, pady=16)
 
         entry = CTkEntry(
@@ -31,7 +32,7 @@ class TaskEntry(StatelessWidget):
             entry.delete(0, "end")
             
             # Notify the store so TodoList updates
-            todo_store.notify()
+            services.notify_task_change()
 
         CTkButton(
             inner_frame,

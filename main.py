@@ -5,7 +5,8 @@ from rocket.runtime.window_manager import WindowManager
 def main():
     windows = WindowManager()
     main_window = windows.get("main_window")
-    Homepage(main_window).render()
+    page = Homepage(main_window)
+    page.render()
     main_window.mainloop()
 
 

@@ -1,26 +1,24 @@
 import tkinter as tk
 from customtkinter import CTkSwitch, CTkLabel
 
-from rocket import StatelessWidget, BuildContext
+from rocket import ReactiveWidget, BuildContext
+from app.ControllerManager import services
 
-class Header(StatelessWidget):
+class Header(ReactiveWidget):
+    def __init__(self):
+        super().__init__(services.theme)
+
     def build(self, context: BuildContext, parent: tk.Frame):
-        # Container for the header
-        container = tk.Frame(parent, bg=context.theme.get_color("bg"))
-        container.pack(fill="x", anchor="n")
-
-        # Title
         CTkLabel(
-            container,
+            parent,
             text="To-do List",
             font=("Helvetica", 16, "bold"),
             text_color=context.theme.get_color("text"),
             fg_color=context.theme.get_color("bg"), 
         ).pack(side="left", padx=10, pady=8)
 
-        # Theme Toggle
         toggle = CTkSwitch(
-            container,
+            parent,
             text="Dark Mode",
             text_color=context.theme.get_color("text"),
             fg_color=context.theme.get_color("accent"),
@@ -29,7 +27,6 @@ class Header(StatelessWidget):
         )
         toggle.pack(side="right", padx=10, pady=5)
 
-        # Initialize toggle state
         if context.theme.isdark():
             toggle.select()
         else:

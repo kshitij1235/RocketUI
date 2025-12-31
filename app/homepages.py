@@ -10,10 +10,23 @@ class Homepage(BasePage):
     def __init__(self, window):
         super().__init__(window, services.theme)
 
-        self.window = window
-
     def build(self, context: BuildContext) -> Widget:
-        Header().mount(context, self.window, fill="x", side="top")
-        TaskEntry().mount(context, self.window, fill="x", side="bottom")
-        TodoList().mount(context, self.window, fill="both", expand=True)
+        # We can return the layout widget directly, or construct one on the fly.
+        return HomepageLayout()
 
+class HomepageLayout(StatelessWidget):
+    def build(self, context: BuildContext, parent: tk.Frame):
+        # Header (Top)
+        Header().mount(context, parent, fill="x", side="top")
+        
+        # Task Entry (Bottom)
+        TaskEntry().mount(context, parent, fill="x", side="bottom")
+        
+        # Todo List (Remaining Space)
+        TodoList().mount(context, parent, fill="both", expand=True)
+
+# Legacy adapter for main.py to call
+# Updated to use the new structure
+def homepage(window):
+    # This shouldn't really be used if main.py was updated, but keeping for safety.
+    Homepage(window).render()
