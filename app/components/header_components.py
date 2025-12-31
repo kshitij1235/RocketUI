@@ -1,21 +1,21 @@
 import tkinter as tk
-from customtkinter import CTkSwitch, CTkLabel
+from customtkinter import CTkSwitch
 
-from rocket import ReactiveWidget, BuildContext
+from rocket import StatelessWidget, BuildContext, RLabel
 from app.ControllerManager import services
+
+
+from rocket import ReactiveWidget
 
 class Header(ReactiveWidget):
     def __init__(self):
         super().__init__(services.theme)
 
     def build(self, context: BuildContext, parent: tk.Frame):
-        CTkLabel(
-            parent,
+        RLabel(
             text="To-do List",
             font=("Helvetica", 16, "bold"),
-            text_color=context.theme.get_color("text"),
-            fg_color=context.theme.get_color("bg"), 
-        ).pack(side="left", padx=10, pady=8)
+        ).mount(context, parent, side="left", padx=10, pady=8)
 
         toggle = CTkSwitch(
             parent,
