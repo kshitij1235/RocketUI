@@ -1,6 +1,6 @@
-from rocket.context import BuildContext
-from rocket.renderer import Renderer
-from rocket.widget_core import WidgetSpec
+from rocket.core.context import BuildContext
+from rocket.render.renderer import Renderer
+from rocket.core.widget import WidgetSpec
 
 class BasePage:
     """

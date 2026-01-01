@@ -1,5 +1,5 @@
-from rocket.state import Signal
-from rocket.theme.theme_manager import ThemeManager
+from rocket.core.state import Signal
+from rocket.theme.manager import ThemeManager
 
 
 class ServiceProvider:

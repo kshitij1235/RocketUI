@@ -3,8 +3,8 @@ from app.components.header_components import Header
 from app.components.todo_components import TodoList
 from app.ControllerManager import services
 from rocket import BasePage, BuildContext
-from rocket.layout import Column
-from rocket.widget_core import WidgetSpec
+from rocket import Column
+from rocket import WidgetSpec
 
 class Homepage(BasePage):
     def __init__(self, window):

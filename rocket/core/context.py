@@ -1,4 +1,4 @@
-from rocket.theme.theme_manager import ThemeManager
+from rocket.theme.manager import ThemeManager
 
 
 class BuildContext:

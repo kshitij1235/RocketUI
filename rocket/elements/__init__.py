@@ -2,10 +2,10 @@ import customtkinter as ctk
 import tkinter as tk
 from typing import Union, Callable, Any, Dict
 
-from rocket.component import Component, StatefulComponent, StatelessComponent
-from rocket.widget_core import WidgetSpec
-from rocket.state import Signal
-from rocket.context import BuildContext
+from rocket.core.component import Component, StatefulComponent, StatelessComponent
+from rocket.core.widget import WidgetSpec
+from rocket.core.state import Signal
+from rocket.core.context import BuildContext
 
 class _RLabel(StatefulComponent):
     def __init__(self, props=None):
@@ -145,7 +145,7 @@ class _RSwitch(StatelessComponent):
     # No special init
 
     def build(self, context: BuildContext) -> WidgetSpec:
-        from rocket.native import NativeSwitch
+        from rocket.render.native import NativeSwitch
         return WidgetSpec(
             widget_class=NativeSwitch,
             props=self.props

@@ -1,23 +1,30 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Union, Any, Dict
-from rocket.widget_core import WidgetSpec
-from rocket.context import BuildContext
-from rocket.state import Signal
+from typing import Any, Dict, Optional, Union
+
+from rocket.core.context import BuildContext
+from rocket.core.state import Signal
+from rocket.core.widget import WidgetSpec
+
 
 class ComponentLifecycleError(Exception):
     """Raised when component lifecycle rules are violated."""
+
     pass
+
 
 class Component(ABC):
     """
     Base class for all RocketUI components.
     Enforces strict lifecycle: init -> mount -> build -> unmount.
     """
-    def __init__(self, props: Dict[str, Any] = None):
+
+    def __init__(self, props: Optional[dict[str, Any]] = None):
         self.props = props or {}
         self.context: Optional[BuildContext] = None
         self._mounted = False
-        self._node: Optional[WidgetSpec] = None # The VNode that produced this component
+        self._node: Optional[WidgetSpec] = (
+            None  # The VNode that produced this component
+        )
 
     def mount(self, context: BuildContext):
         """Called by the renderer when the component is added to the tree."""
@@ -55,15 +62,19 @@ class Component(ABC):
         """
         pass
 
+
 class StatelessComponent(Component):
     """A component that is a pure function of its props."""
+
     pass
+
 
 class StatefulComponent(Component):
     """
     A component that owns internal state.
     State mutations must happen via set_state.
     """
+
     def __init__(self, props: Dict[str, Any] = None):
         super().__init__(props)
         self._signals: list[Signal] = []
@@ -85,7 +96,7 @@ class StatefulComponent(Component):
         # For now, we rely on the renderer to handle 'invalidate'.
         # We need a way to tell the renderer "I am dirty".
         # This requires the component to have a reference to its 'owner' or 'updater'.
-        if hasattr(self, '_request_update_callback'):
+        if hasattr(self, "_request_update_callback"):
             self._request_update_callback(self)
 
     def on_unmount(self):

@@ -1,11 +1,8 @@
 from app.ControllerManager import services
 from app.helper import database
-from rocket.component import StatefulComponent
-from rocket.context import BuildContext
-from rocket.elements import RButton, REntry
-from rocket.layout import Row
-from rocket.widget_core import WidgetSpec
-from rocket.state import Signal
+from rocket import BuildContext, RButton, REntry, Signal, StatefulComponent, WidgetSpec
+from rocket import Row
+
 
 class _TaskEntry(StatefulComponent):
     def __init__(self, props=None):
@@ -13,6 +10,7 @@ class _TaskEntry(StatefulComponent):
         self.text_signal = Signal("")
 
     def build(self, context: BuildContext) -> WidgetSpec:
+
         return Row(
             spacing=10,
             children=[
@@ -21,7 +19,7 @@ class _TaskEntry(StatefulComponent):
                     placeholder_text="Add task",
                     height=32,
                     side="left",
-                    expand = True
+                    expand=True,
                 ),
                 RButton(
                     text="Add Task",
@@ -30,9 +28,9 @@ class _TaskEntry(StatefulComponent):
                     height=32,
                     corner_radius=6,
                     font=("Helvetica", 11),
-                    side="right"
-                )
-            ]
+                    side="right",
+                ),
+            ],
         )
 
     def _on_add(self):
@@ -43,6 +41,7 @@ class _TaskEntry(StatefulComponent):
         database.add_task(text)
         self.text_signal.set("")
         services.notify_task_change()
+
 
 def TaskEntry(**kwargs) -> WidgetSpec:
     return WidgetSpec(widget_class=_TaskEntry, props=kwargs)

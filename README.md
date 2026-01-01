@@ -1,336 +1,169 @@
-# Rocket UI Framework
+# RocketUI
 
-Rocket is a **state-driven UI framework built on top of Tkinter**, designed to give you a **React-like rendering model** without forcing you to write boilerplate, lifecycle code, or manual refresh logic.
+RocketUI is a declarative, component-based UI framework for Tkinter that manages state, rendering, and layout predictably.
 
-Rocket separates **framework code** from **application code**, provides a **clean CLI**, and supports **hot reload**, **theme updates**, and **automatic UI re-rendering**.
+## Why It Exists
 
----
+*   **Managing state without spaghetti callbacks**
+*   **Avoiding manual widget recreation**
+*   **Predictable re-rendering**
+*   **Cleaner layout composition**
 
-## Key Concepts
+## Mental Model
 
-### 1. Declarative Rendering
+*   **You describe UI by returning `WidgetSpecs`**: Your code defines *what* it should look like, not *how* to draw it.
+*   **Components do not create Tk widgets directly**: They return descriptions. The framework assumes the burden of creation.
+*   **State changes trigger re-renders**: Updating a `Signal` notifies the component to rebuild its description.
+*   **The renderer updates existing widgets**: It differences the old and new descriptions and only applies changes (creating, destroying, or updating properties).
 
-You describe *what* the UI should look like. Rocket decides *when* to re-render.
-
-You never manually refresh widgets.
-
----
-
-### 2. State-Driven UI
-
-Rocket uses a simple `State` object.
-
-When state changes:
-
-* All subscribed components re-render automatically
-* No callbacks, no manual redraws
-
----
-
-### 3. Component Ownership
-
-Each component:
-
-* Owns its container
-* Re-renders only its subtree
-* Never destroys unrelated widgets
-
----
-
-### 4. Theme Reactivity
-
-Changing the theme:
-
-* Automatically re-renders all subscribed components
-* No widget-by-widget updates
-
----
-
-## Project Structure
-
-```
-.
-├── app/                  # Your application code
-│   ├── components/       # UI components
-│   ├── helper/           # Database, utilities
-│   ├── homepages.py      # Page composition
-│   └── ControllerManager.py
-│
-├── rocket/               # Rocket framework (DO NOT EDIT)
-│   ├── components.py
-│   ├── renderer.py
-│   ├── state.py
-│   ├── theme/
-│   ├── runtime/
-│   └── cli/
-│
-├── main.py               # App entry point
-├── project_config.py     # App configuration
-└── requirements.txt
-```
-
----
-
-## Core APIs
-
-### `Components`
-
-Used to create themed widgets and bind state.
-
-```python
-from rocket import Components
-```
-
-Provides:
-
-* `Rframe`
-* `Rlabels`
-* `Rbutton`
-* `Rcheckbox`
-* `Rentry`
-* `use_state(...)`
-
----
-
-### `State`
-
-Represents reactive state.
-
-```python
-from rocket import State
-
-todo_store = State()
-```
-
-When you call:
-
-```python
-todo_store.notify()
-```
-
-All subscribed components re-render automatically.
-
----
-
-### `ThemeManager`
-
-Controls light/dark themes.
-
-```python
-from rocket import ThemeManager
-
-app_theme = ThemeManager()
-```
-
-Toggling the theme automatically re-renders all components using it.
-
----
-
-## Writing Components (Example)
-
-### Todo List Component
-
-```python
-def todo_list(window):
-    comp = Components(window, app_theme)
-
-    container = comp.Rframe(window)
-    container.pack(fill="both", expand=True)
-
-    def render(parent):
-        for child in parent.winfo_children():
-            child.destroy()
-
-        tasks = get_all_tasks()
-
-        if not tasks:
-            no_tasks_message(parent)
-            return
-
-        _, scrollable = add_scrollbar(parent, app_theme.get_color("bg"))
-
-        for task, status in tasks:
-            task_frame(scrollable, task, bool(status))
-
-    comp.use_state(todo_store, container, render)
-```
-
-You never call `render()` manually.
-Rocket does it automatically when state changes.
-
----
-
-## Single Row Component
-
-```python
-def task_frame(parent, task: str, status: bool):
-    comp = Components(parent, app_theme)
-
-    frame = comp.Rframe(parent)
-    frame.pack(fill="x", padx=20, pady=5)
-
-    status_var = tk.BooleanVar(value=status)
-
-    comp.Rcheckbox(
-        frame,
-        text=task,
-        variable=status_var,
-        command=lambda: update_task_status(task, status_var),
-    ).pack(side="left")
-
-    comp.Rbutton(
-        frame,
-        text="Delete",
-        command=lambda: delete_task(task),
-    ).pack(side="right")
-```
-
----
-
-## Pages
-
-Pages are just functions that compose components.
-
-```python
-def homepage(window):
-    todo_header(window)
-    todo_list(window)
-    task_entry(window)
-```
-
-No router. No lifecycle. Just functions.
-
----
-
-## App Entry Point
+## Hello World
 
 ```python
 from rocket.runtime.window_manager import WindowManager
-from app.homepages import homepage
+from rocket.theme.manager import ThemeManager
+from rocket import BasePage, StatefulComponent, Column, RLabel, RButton, Signal
 
-def main():
-    windows = WindowManager()
-    main_window = windows.get("main_window")
+class Counter(StatefulComponent):
+    def __init__(self, props=None):
+        super().__init__(props)
+        self.count = Signal(0)
+        self.register_signal(self.count)  # Auto-subscribe to changes
 
-    homepage(main_window)
-    main_window.mainloop()
+    def build(self, context):
+        return Column(spacing=20, children=[
+            RLabel(text=self.count),
+            RButton(
+                text="Increment",
+                command=lambda: self.count.set(self.count.get() + 1)
+            )
+        ])
+
+class App(BasePage):
+    def build(self, context):
+        return Counter()
 
 if __name__ == "__main__":
-    main()
+    win = WindowManager().get("main_window")
+    App(win, ThemeManager()).render()
+    win.mainloop()
 ```
 
-Rocket manages the window.
-Your app decides what to render.
+## Project Structure
 
----
+*   `main.py`: Entry point for the application.
+*   `app/components/`: Reusable UI components.
+*   `app/pages/`: Full-screen page definitions.
+*   `rocket/`: The framework source code.
 
-## Configuration (`project_config.py`)
+## Core Concepts
 
-This file is owned by the **app**, not the framework.
+### Components
+All UI is built from `Component` subclasses.
+*   **Stateless**: Pure render functions based on `props`.
+*   **Stateful**: Can hold `Signal`s and update themselves.
 
+### State & Signals
+`Signal` is the reactive primitive.
 ```python
-PROJECT_NAME = "demo_app"
-VERSION = "0.0"
-RELEASE = False
-
-class MainWindowConfig:
-    title = "Todo List"
-    geometry = "500x700"
-    resizable = False
-    icon = "rocket_ui.png"
+count = Signal(0)
+count.set(1) # Triggers updates
+print(count.get())
 ```
 
-Rocket loads this automatically at runtime.
+### Layout
+Layouts are just components that arrange children.
+*   `Column`: Vertical stack.
+*   `Row`: Horizontal stack.
+*   `ScrollableColumn`: Vertical stack with scrollbar.
 
----
+### Pages
+The root of your widget tree. Manages the window connection and global theme.
 
-## CLI Usage
+### Theme
+Passed down via `BuildContext`. Allows global styling.
 
-After installation:
+## Layout Basics
 
-```bash
-pip install -e .
+**Column (Vertical Stack)**
+```python
+Column(spacing=10, children=[
+    RLabel(text="Top"),
+    RLabel(text="Bottom")
+])
 ```
 
-Available commands:
-
-```bash
-rocket --help
-rocket run
-rocket run --hotreload
-rocket build
-rocket clean
-rocket version
+**Row (Horizontal Stack)**
+```python
+Row(spacing=5, children=[
+    RButton(text="Left"),
+    RButton(text="Right")
+])
 ```
 
-### Hot Reload
-
-Automatically restarts the app on `.py` file changes:
-
-```bash
-rocket run --hotreload
+**Nesting**
+```python
+Column(children=[
+    Header(),
+    Row(children=[SideBar(), Content()]) # Rows inside Columns
+])
 ```
 
----
+## Common Patterns
 
-##  Build (PyInstaller)
-
-```bash
-rocket build
+**Updating Input State**
+```python
+# REntry expects a Signal
+self.name = Signal("")
+REntry(text_variable=self.name)
 ```
 
-Output:
-
-```
-build/
-└── linux/
-    ├── dist/
-    └── work/
+**Conditionally Rendering Widgets**
+```python
+Column(children=[
+    RLabel("Loading...") if self.loading.get() else Content(),
+])
 ```
 
-OS is auto-detected.
+**Simple Navigation**
+```python
+# Replace the root component
+self.current_page.set("home")
+```
 
----
+## What NOT To Do
 
-## 🚫 What Rocket Does NOT Do
+*   **Don't mutate state in `build()`**: This causes infinite render loops.
+*   **Don't touch Tk widgets directly**: You will break the renderer's diffing algorithm.
+*   **Don't store widget instances**: Store `WidgetSpec` descriptions only.
+*   **Don't subscribe to signals with lambdas without cleanup**: Use `register_signal`.
 
-* No virtual DOM
-* No diffing
-* No magic imports
-* No global widget registry
-* No hidden side effects
+## Error Messages & Debugging
 
-Rocket is **simple by design**.
+*   **"Component is already mounted"**: You are reusing a component instance in two places. Create new instances.
+*   **"Unknown window"**: `WindowManager` config is missing.
+*   **Silent Failures**: Check that you returned `WidgetSpec` from `build()`. Returning `None` renders nothing.
 
----
+## Installation & Running
 
-## 🎯 When to Use Rocket
+**Prerequisites**: Python 3.10+
 
-✔ Desktop apps
-✔ Internal tools
-✔ Prototypes
-✔ Small to medium UI projects
-✔ Tkinter apps that need structure
+1.  **Install dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-❌ Web apps
-❌ High-frequency animations
-❌ Massive widget trees
+2.  **Run the app**:
+    ```bash
+    python main.py
+    ```
 
----
+## Roadmap / Status
 
-## Philosophy
+**Status**: Experimental / Alpha.
 
-> UI should re-render because **state changed**,
-> not because you remembered to call a function.
+**Subject to Change**:
+*   Signal API (might move to hooks like `use_signal`)
+*   Context API
+*   Native Widget wrappers
 
-Rocket enforces that rule.
-
----
-
-## Final Notes
-
-* Framework code lives in `rocket/`
-* App code lives in `app/`
-* Never import app code from the framework
-* State changes drive UI updates
-* Themes are reactive by default
+This framework is for internal use and rapid prototyping.

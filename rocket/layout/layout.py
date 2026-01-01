@@ -1,7 +1,7 @@
-from rocket.component import StatelessComponent
-from rocket.widget_core import WidgetSpec
-from rocket.native import NativeColumn, NativeRow, NativeScrollableColumn
-from rocket.context import BuildContext
+from rocket.core.component import StatelessComponent
+from rocket.core.widget import WidgetSpec
+from rocket.render.native import NativeColumn, NativeRow, NativeScrollableColumn
+from rocket.core.context import BuildContext
 
 # Reuse a single empty tuple to avoid repeated allocations
 _EMPTY_CHILDREN: tuple[WidgetSpec, ...] = ()

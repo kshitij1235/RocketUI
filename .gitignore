@@ -6,3 +6,4 @@ build
 *.spec
 .zed
 *info-egg
+*.db

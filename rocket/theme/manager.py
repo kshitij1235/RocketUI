@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from rocket.state import Signal
+from rocket.core.state import Signal
 from rocket.theme.default import DARK_COLORS, LIGHT_COLORS
 
 
