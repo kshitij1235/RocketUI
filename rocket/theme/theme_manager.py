@@ -1,3 +1,4 @@
+import customtkinter as ctk
 from rocket.state import Signal
 from rocket.theme.default import DARK_COLORS, LIGHT_COLORS
 
@@ -22,6 +23,8 @@ class ThemeManager(Signal[str]):
 
     def set(self, value: str) -> None:
         self._update_colors(value)
+        # Sync with CustomTkinter global theme
+        ctk.set_appearance_mode("Dark" if value == "dark" else "Light")
         super().set(value)
 
     def toggle(self):

@@ -1,32 +1,35 @@
-import tkinter as tk
-
-from customtkinter import CTkSwitch
-
 from app.ControllerManager import services
-from rocket import BuildContext, RLabel, StatefullWidget
+from rocket.component import StatefulComponent
+from rocket.context import BuildContext
+from rocket.elements import RLabel, RSwitch
+from rocket.layout import Row
+from rocket.widget_core import WidgetSpec
 
+class _Header(StatefulComponent):
+    def __init__(self, props=None):
+        super().__init__(props=props)
+        self.register_signal(services.theme)
 
-class Header(StatefullWidget):
-    def __init__(self):
-        super().__init__(services.theme)
-
-    def build(self, context: BuildContext, parent: tk.Frame):
-        RLabel(
-            text="To-do List",
-            font=("Helvetica", 16, "bold"),
-        ).mount(context, parent, side="left", padx=10, pady=8)
-
-        toggle = CTkSwitch(
-            parent,
-            text="Dark Mode",
-            text_color=context.theme.get_color("text"),
-            fg_color=context.theme.get_color("accent"),
-            command=context.theme.toggle,
-            bg_color=context.theme.get_color("bg"),
+    def build(self, context: BuildContext) -> WidgetSpec:
+        is_dark = context.theme.isdark()
+        
+        return Row(
+            spacing=10,
+            children=[
+                RLabel(
+                    text="To-do List",
+                    font=("Helvetica", 16, "bold"),
+                    # Removing fixed width to let it natural size, switch pushes right
+                    side="left"
+                ),
+                RSwitch(
+                    text="Dark Mode",
+                    checked=is_dark,
+                    command=services.theme.toggle,
+                    side="right" # Push to right
+                )
+            ]
         )
-        toggle.pack(side="right", padx=10, pady=5)
 
-        if context.theme.isdark():
-            toggle.select()
-        else:
-            toggle.deselect()
+def Header(**kwargs) -> WidgetSpec:
+    return WidgetSpec(widget_class=_Header, props=kwargs)

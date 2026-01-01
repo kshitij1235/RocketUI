@@ -5,6 +5,7 @@ DARK_COLORS = {
     "hover": "#52525B",  # Zinc-600 equivalent
     "text": "#FFFFFF",  # White text
     "subtext": "#A1A1AA",  # Zinc-400 equivalent
+    "text_dim": "#71717A", # Dim text for placeholders/empty states
     "input_bg": "#FFFFFF",  # White background for input
     "input_text": "#000000",  # Black text for input
 }
@@ -15,6 +16,7 @@ LIGHT_COLORS = {
     "hover": "#CCCCCC",  # Medium gray hover effect
     "text": "#000000",  # Black text for better contrast
     "subtext": "#333333",  # Darker gray for subtext
+    "text_dim": "#A1A1AA", # Dim text
     "input_bg": "#FFFFFF",  # White background for input fields
     "input_text": "#000000",  # Black text for input fields
 }

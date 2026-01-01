@@ -1,40 +1,48 @@
-import tkinter as tk
-
 from app.ControllerManager import services
-from app.helper.database import add_task
-from rocket import BuildContext, RButton, REntry, StatefullWidget
+from app.helper import database
+from rocket.component import StatefulComponent
+from rocket.context import BuildContext
+from rocket.elements import RButton, REntry
+from rocket.layout import Row
+from rocket.widget_core import WidgetSpec
+from rocket.state import Signal
 
+class _TaskEntry(StatefulComponent):
+    def __init__(self, props=None):
+        super().__init__(props=props)
+        self.text_signal = Signal("")
 
-class TaskEntry(StatefullWidget):
-    def __init__(self):
-        super().__init__(services.theme)
-
-    def build(self, context: BuildContext, parent: tk.Frame):
-        inner_frame = tk.Frame(parent, bg=context.theme.get_color("bg"))
-        inner_frame.pack(fill="x", padx=16, pady=16)
-
-        entry = REntry(
-            placeholder_text="Add task",
-            height=32,
+    def build(self, context: BuildContext) -> WidgetSpec:
+        return Row(
+            spacing=10,
+            children=[
+                REntry(
+                    text_variable=self.text_signal,
+                    placeholder_text="Add task",
+                    height=32,
+                    side="left",
+                    expand = True
+                ),
+                RButton(
+                    text="Add Task",
+                    command=self._on_add,
+                    width=80,
+                    height=32,
+                    corner_radius=6,
+                    font=("Helvetica", 11),
+                    side="right"
+                )
+            ]
         )
-        entry.mount(
-            context, inner_frame, side="left", fill="x", expand=True, padx=(0, 8)
-        )
 
-        def on_add():
-            text = entry.get().strip()
-            if not text:
-                return
+    def _on_add(self):
+        text = self.text_signal.get().strip()
+        if not text:
+            return
 
-            add_task(text)
-            entry.delete(0, "end")
-            services.notify_task_change()
+        database.add_task(text)
+        self.text_signal.set("")
+        services.notify_task_change()
 
-        RButton(
-            text="Add Task",
-            width=80,
-            height=32,
-            corner_radius=6,
-            font=("Helvetica", 11),
-            command=on_add,
-        ).mount(context, inner_frame, side="right")
+def TaskEntry(**kwargs) -> WidgetSpec:
+    return WidgetSpec(widget_class=_TaskEntry, props=kwargs)

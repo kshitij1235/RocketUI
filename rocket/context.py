@@ -10,8 +10,6 @@ class BuildContext:
     def __init__(self, window, theme: ThemeManager, **kwargs):
         self.window = window
         self.theme: ThemeManager = theme
-
-        # glob storage
         self._data = kwargs
 
     def get(self, key):

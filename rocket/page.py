@@ -1,41 +1,41 @@
-import tkinter as tk
-
 from rocket.context import BuildContext
-from rocket.state_widgets.base import Widget
-
+from rocket.renderer import Renderer
+from rocket.widget_core import WidgetSpec
 
 class BasePage:
     """
     Root of a page.
-    Manages the top-level BuildContext and renders the root widget.
+    Manages the top-level Renderer and Theme context.
     """
 
     def __init__(self, window, theme, data_provider=None):
         self.window = window
         self.theme = theme
         self.data_provider = data_provider or {}
+        
+        self.renderer = Renderer(self.window)
 
         # Subscribe to theme changes
         if hasattr(self.theme, "subscribe"):
             self.theme.subscribe(self._on_theme_change)
 
     def _on_theme_change(self, _):
-        self.reload()
-
-    def reload(self):
-        """Rerender the entire page (e.g. on theme switch)."""
-        for child in self.window.winfo_children():
-            child.destroy()
         self.render()
 
     def render(self):
-        context = BuildContext(self.window, self.theme, **self.data_provider)
-        root_widget = self.build(context)
-        if root_widget:
-            root_widget.mount(context, self.window, fill="both", expand=True)
+        """Rerender the entire page."""
+        # Create context
+        context = BuildContext(window=self.window, theme=self.theme, **self.data_provider)
+        
+        # Build root spec
+        root_spec = self.build(context)
+        
+        # Delegate to renderer
+        if root_spec:
+            self.renderer.render(root_spec, context)
 
-    def build(self, context: BuildContext) -> Widget:
+    def build(self, context: BuildContext) -> WidgetSpec:
         """
-        Subclasses implement this to return the root Widget.
+        Subclasses implement this to return the root WidgetSpec.
         """
         raise NotImplementedError
