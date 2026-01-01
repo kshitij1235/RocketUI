@@ -1,11 +1,13 @@
 from rocket.state import Signal
 from rocket.theme.default import DARK_COLORS, LIGHT_COLORS
 
+
 class ThemeManager(Signal[str]):
     """
     Manages theme state as a Signal.
     Value is 'light' or 'dark'.
     """
+
     def __init__(self, theme="light"):
         super().__init__(theme)
         self.LIGHT_COLORS = LIGHT_COLORS
@@ -29,5 +31,5 @@ class ThemeManager(Signal[str]):
     def isdark(self):
         return self.get() == "dark"
 
-    def get_color(self, key):
+    def get_color(self, key) -> str:
         return self.COLORS.get(key, "Key not found")

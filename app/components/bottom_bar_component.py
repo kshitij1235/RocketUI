@@ -2,9 +2,10 @@ import tkinter as tk
 
 from app.ControllerManager import services
 from app.helper.database import add_task
-from rocket import ReactiveWidget, BuildContext, REntry, RButton
+from rocket import BuildContext, RButton, REntry, StatefullWidget
 
-class TaskEntry(ReactiveWidget):
+
+class TaskEntry(StatefullWidget):
     def __init__(self):
         super().__init__(services.theme)
 
@@ -16,13 +17,15 @@ class TaskEntry(ReactiveWidget):
             placeholder_text="Add task",
             height=32,
         )
-        entry.mount(context, inner_frame, side="left", fill="x", expand=True, padx=(0, 8))
+        entry.mount(
+            context, inner_frame, side="left", fill="x", expand=True, padx=(0, 8)
+        )
 
         def on_add():
             text = entry.get().strip()
             if not text:
                 return
-            
+
             add_task(text)
             entry.delete(0, "end")
             services.notify_task_change()

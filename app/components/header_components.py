@@ -1,13 +1,12 @@
 import tkinter as tk
+
 from customtkinter import CTkSwitch
 
-from rocket import StatelessWidget, BuildContext, RLabel
 from app.ControllerManager import services
+from rocket import BuildContext, RLabel, StatefullWidget
 
 
-from rocket import ReactiveWidget
-
-class Header(ReactiveWidget):
+class Header(StatefullWidget):
     def __init__(self):
         super().__init__(services.theme)
 

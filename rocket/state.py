@@ -1,13 +1,15 @@
-from typing import Generic, TypeVar, Callable, List
 import weakref
+from typing import Callable, Generic, List, TypeVar
 
 T = TypeVar("T")
+
 
 class Signal(Generic[T]):
     """
     A simple observable state container.
     Uses weak references to avoid memory leaks.
     """
+
     def __init__(self, initial_value: T = None):
         self._value: T = initial_value
         # List of weak references to subscribers
@@ -33,7 +35,7 @@ class Signal(Generic[T]):
                     print(f"Error in signal subscriber: {e}")
             else:
                 dead_refs.append(ref)
-        
+
         for ref in dead_refs:
             self._subscribers.remove(ref)
 
@@ -46,7 +48,7 @@ class Signal(Generic[T]):
         # If it's a plain function, WeakMethod might fail or not be appropriate.
         try:
             ref = weakref.WeakMethod(callback)
-            
+
             # Check if already subscribed (simple linear scan)
             for existing_ref in self._subscribers:
                 if existing_ref() == callback:
@@ -59,7 +61,9 @@ class Signal(Generic[T]):
             # But if a user passes a lambda, WeakMethod fails.
             # Let's just warn or handle?
             # Our ReactiveWidget passes self._on_signal_change, which is a method.
-            print(f"Warning: Could not create weak reference for {callback}. Subscription ignored to prevent leaks.")
+            print(
+                f"Warning: Could not create weak reference for {callback}. Subscription ignored to prevent leaks."
+            )
 
     def unsubscribe(self, callback: Callable[[T], None]) -> None:
         # Harder with weakrefs to find exact match without resolving
@@ -68,6 +72,6 @@ class Signal(Generic[T]):
             resolved = ref()
             if resolved == callback or resolved is None:
                 to_remove.append(ref)
-        
+
         for ref in to_remove:
             self._subscribers.remove(ref)

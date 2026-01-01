@@ -1,19 +1,22 @@
 import tkinter as tk
+
 from rocket.context import BuildContext
-from rocket.widget import Widget
+from rocket.state_widgets.base import Widget
+
 
 class BasePage:
     """
     Root of a page.
     Manages the top-level BuildContext and renders the root widget.
     """
+
     def __init__(self, window, theme, data_provider=None):
         self.window = window
         self.theme = theme
         self.data_provider = data_provider or {}
-        
+
         # Subscribe to theme changes
-        if hasattr(self.theme, 'subscribe'):
+        if hasattr(self.theme, "subscribe"):
             self.theme.subscribe(self._on_theme_change)
 
     def _on_theme_change(self, _):
@@ -28,9 +31,6 @@ class BasePage:
     def render(self):
         context = BuildContext(self.window, self.theme, **self.data_provider)
         root_widget = self.build(context)
-        
-        # Use the unified mount method
-        # CRITICAL FIX: Ensure the root widget fills the window!
         if root_widget:
             root_widget.mount(context, self.window, fill="both", expand=True)
 
