@@ -15,3 +15,15 @@ class Homepage(BasePage):
             expand=True,
             children=[Header(), TaskEntry(side="bottom"), TodoList(expand=True)],
         )
+
+
+class SettingsPage(BasePage):
+    def __init__(self, window):
+        super().__init__(window, services.theme)
+
+    def build(self, context: BuildContext):
+        return Column(
+            spacing=15,
+            expand=True,
+            children=[],
+        )

@@ -1,6 +1,5 @@
 import os
 import sys
-from multiprocessing.spawn import import_main_path
 from tkinter import PhotoImage
 
 import customtkinter as ctk
